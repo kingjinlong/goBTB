@@ -68,8 +68,8 @@ func (dr DepthRecords) Less(i, j int) bool {
 }
 
 type Depth struct {
-	AskList,
-	BidList DepthRecords
+	Exchange, Coinpair string
+	AskList, BidList   DepthRecords
 }
 
 type APIConfig struct {

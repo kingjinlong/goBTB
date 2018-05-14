@@ -137,8 +137,12 @@ func (ok *OKEx) GetFutureTicker(currencyPair CurrencyPair, contractType string) 
 
 func (ok *OKEx) GetFutureDepth(currencyPair CurrencyPair, contractType string, size int) (*Depth, error) {
 	url := FUTURE_API_BASE_URL + FUTURE_DEPTH_URI
-	fmt.Println(fmt.Sprintf(url, strings.ToLower(currencyPair.ToSymbol("_")), contractType))
-	resp, err := ok.client.Get(fmt.Sprintf(url, strings.ToLower(strings.ToLower(currencyPair.ToSymbol("_"))), contractType))
+	ss := fmt.Sprintf(url, strings.ToLower(currencyPair.ToSymbol("_")), contractType)
+	log.Println(ss)
+	//uss = "https://www.okex.com/api/v1/depth.do?symbol=etc_btc&size=2"
+	//resp, err := ok.client.Get(fmt.Sprintf(url, strings.ToLower(strings.ToLower(currencyPair.ToSymbol("_"))), contractType))
+	// resp, err := ok.client.Get(fmt.Sprintf(url, strings.ToLower(strings.ToLower(currencyPair.ToSymbol("_"))), contractType))
+	resp, err := ok.client.Get(ss)
 	if err != nil {
 		return nil, err
 	}
@@ -228,12 +232,13 @@ type futureUserInfoResponse struct {
 	Error_code int  `json:"error_code"`
 }
 
+// GetFutureUserinfo GetFutureUserinfo
 func (ok *OKEx) GetFutureUserinfo() (*FutureAccount, error) {
 	userInfoUrl := FUTURE_API_BASE_URL + FUTURE_USERINFO_URI
-
+	fmt.Println(userInfoUrl)
 	postData := url.Values{}
 	ok.buildPostForm(&postData)
-
+	fmt.Println(postData)
 	body, err := HttpPostForm(ok.client, userInfoUrl, postData)
 
 	if err != nil {

@@ -55,7 +55,8 @@ func (bit *Bithumb) placeOrder(side, amount, price string, pair CurrencyPair) (*
 
 	log.Println(retmap)
 	return &Order{
-		OrderID:  ToInt(retmap["order_id"]),
+		//OrderID:  ToInt(retmap["order_id"]),
+		OrderID2: retmap["order_id"].(string),
 		Amount:   ToFloat64(amount),
 		Price:    ToFloat64(price),
 		Currency: pair,
@@ -85,8 +86,17 @@ func (bit *Bithumb) CancelOrder(orderId string, currency CurrencyPair) (bool, er
 
 /*补丁*/
 func (bit *Bithumb) CancelOrder2(side, orderId string, currency CurrencyPair) (bool, error) {
+	var tradeSide string
+	switch side {
+	case "SELL":
+		tradeSide = "ask"
+	case "BUY":
+		tradeSide = "bid"
+	}
+
 	var retmap map[string]interface{}
-	params := fmt.Sprintf("type=%s&order_id=%s&currency=%s", side, orderId, currency.CurrencyA.Symbol)
+	params := fmt.Sprintf("type=%s&order_id=%s&currency=%s", tradeSide, orderId, currency.CurrencyA.Symbol)
+	log.Println(params)
 	err := bit.doAuthenticatedRequest("/trade/cancel", params, &retmap)
 	if err != nil {
 		return false, err
@@ -94,6 +104,7 @@ func (bit *Bithumb) CancelOrder2(side, orderId string, currency CurrencyPair) (b
 	if retmap["status"].(string) == "0000" {
 		return true, nil
 	}
+	log.Println(retmap)
 	return false, errors.New(retmap["status"].(string))
 }
 
@@ -103,6 +114,7 @@ func (bit *Bithumb) GetOneOrder(orderId string, currency CurrencyPair) (*Order, 
 
 /*补丁*/
 func (bit *Bithumb) GetOneOrder2(side, orderId string, currency CurrencyPair) (*Order, error) {
+
 	var retmap map[string]interface{}
 	params := fmt.Sprintf("type=%s&order_id=%s&currency=%s", side, orderId, currency.CurrencyA.Symbol)
 	err := bit.doAuthenticatedRequest("/info/order_detail", params, &retmap)
@@ -168,7 +180,7 @@ func (bit *Bithumb) GetUnfinishOrders(currency CurrencyPair) ([]Order, error) {
 	for _, v := range datas {
 		orderinfo := v.(map[string]interface{})
 		ord := Order{
-			OrderID:  ToInt(orderinfo["order_id"]),
+			OrderID2: orderinfo["order_id"].(string),
 			Amount:   ToFloat64(orderinfo["units"]),
 			Price:    ToFloat64(orderinfo["price"]),
 			Currency: currency,
@@ -203,10 +215,11 @@ func (bit *Bithumb) GetUnfinishOrders(currency CurrencyPair) ([]Order, error) {
 	return orders, nil
 }
 
-func (bit *Bithumb) GetOrderHistorys(currency CurrencyPair, currentPage, pageSize int) ([]Order, error) {
-	panic("not implement")
-}
+// func (bit *Bithumb) GetOrderHistorys(currency CurrencyPair, currentPage, pageSize int) ([]Order, error) {
+// 	panic("not implement")
+// }
 
+// GetAccount GetAccount
 func (bit *Bithumb) GetAccount() (*Account, error) {
 	var retmap map[string]interface{}
 	err := bit.doAuthenticatedRequest("/info/balance", "currency=ALL", &retmap)
@@ -216,41 +229,51 @@ func (bit *Bithumb) GetAccount() (*Account, error) {
 	datamap := retmap["data"].(map[string]interface{})
 	acc := new(Account)
 	acc.SubAccounts = make(map[Currency]SubAccount)
-	acc.SubAccounts[LTC] = SubAccount{
-		Currency:     LTC,
-		Amount:       ToFloat64(datamap["available_ltc"]),
-		ForzenAmount: ToFloat64(datamap["in_use_ltc"]),
-		LoanAmount:   0}
-	acc.SubAccounts[BTC] = SubAccount{
-		Currency:     BTC,
-		Amount:       ToFloat64(datamap["available_btc"]),
-		ForzenAmount: ToFloat64(datamap["in_use_etc"]),
-		LoanAmount:   0}
-	acc.SubAccounts[ETH] = SubAccount{
-		Currency:     ETH,
-		Amount:       ToFloat64(datamap["available_eth"]),
-		ForzenAmount: ToFloat64(datamap["in_use_eth"]),
-		LoanAmount:   0}
-	acc.SubAccounts[ETC] = SubAccount{
-		Currency:     ETC,
-		Amount:       ToFloat64(datamap["available_etc"]),
-		ForzenAmount: ToFloat64(datamap["in_use_etc"]),
-		LoanAmount:   0}
-	acc.SubAccounts[BCH] = SubAccount{
-		Currency:     BCH,
-		Amount:       ToFloat64(datamap["available_bch"]),
-		ForzenAmount: ToFloat64(datamap["in_use_bch"]),
-		LoanAmount:   0}
+	// acc.SubAccounts[LTC] = SubAccount{
+	// 	Currency:     LTC,
+	// 	Amount:       ToFloat64(datamap["available_ltc"]),
+	// 	ForzenAmount: ToFloat64(datamap["in_use_ltc"]),
+	// 	LoanAmount:   0}
+	// acc.SubAccounts[BTC] = SubAccount{
+	// 	Currency:     BTC,
+	// 	Amount:       ToFloat64(datamap["available_btc"]),
+	// 	ForzenAmount: ToFloat64(datamap["in_use_etc"]),
+	// 	LoanAmount:   0}
+	// acc.SubAccounts[ETH] = SubAccount{
+	// 	Currency:     ETH,
+	// 	Amount:       ToFloat64(datamap["available_eth"]),
+	// 	ForzenAmount: ToFloat64(datamap["in_use_eth"]),
+	// 	LoanAmount:   0}
+	// acc.SubAccounts[ETC] = SubAccount{
+	// 	Currency:     ETC,
+	// 	Amount:       ToFloat64(datamap["available_etc"]),
+	// 	ForzenAmount: ToFloat64(datamap["in_use_etc"]),
+	// 	LoanAmount:   0}
+	// acc.SubAccounts[BCH] = SubAccount{
+	// 	Currency:     BCH,
+	// 	Amount:       ToFloat64(datamap["available_bch"]),
+	// 	ForzenAmount: ToFloat64(datamap["in_use_bch"]),
+	// 	LoanAmount:   0}
 	acc.SubAccounts[KRW] = SubAccount{
 		Currency:     KRW,
 		Amount:       ToFloat64(datamap["available_krw"]),
 		ForzenAmount: ToFloat64(datamap["in_use_krw"]),
 		LoanAmount:   0}
+	acc.SubAccounts[EOS] = SubAccount{
+		Currency:     EOS,
+		Amount:       ToFloat64(datamap["total_eos"]),
+		ForzenAmount: ToFloat64(datamap["in_use_eos"]),
+		LoanAmount:   0}
+	// in_use_eos
+	// available_eos
+	// total_eos
+	// xcoin_last_eos
 	//log.Println(datamap)
 	acc.Exchange = bit.GetExchangeName()
 	return acc, nil
 }
 
+// doAuthenticatedRequest doAuthenticatedRequest
 func (bit *Bithumb) doAuthenticatedRequest(uri, params string, ret interface{}) error {
 	nonce := time.Now().UnixNano() / int64(time.Millisecond)
 	api_nonce := fmt.Sprint(nonce)
@@ -262,7 +285,6 @@ func (bit *Bithumb) doAuthenticatedRequest(uri, params string, ret interface{}) 
 	hash_hmac_str := GetParamHmacSHA512Base64Sign(bit.secretkey, hmac_data)
 	api_sign := hash_hmac_str
 	content_length_str := strconv.Itoa(len(params))
-
 	// Connects to Bithumb API server and returns JSON result value.
 	resp, err := NewHttpRequest(bit.client, "POST", baseUrl+uri,
 		bytes.NewBufferString(params).String(), map[string]string{
@@ -272,44 +294,50 @@ func (bit *Bithumb) doAuthenticatedRequest(uri, params string, ret interface{}) 
 			"Content-Type":   "application/x-www-form-urlencoded",
 			"Content-Length": content_length_str,
 		}) // URL-encoded payload
-
 	if err != nil {
+		log.Println(err)
 		return err
 	}
-
+	//log.Printf(string(resp))
 	err = json.Unmarshal(resp, ret)
 
 	return err
 }
 
-func (bit *Bithumb) GetTicker(currency CurrencyPair) (*Ticker, error) {
-	respmap, err := HttpGet(bit.client, fmt.Sprintf("%s/public/ticker/%s", baseUrl, currency.CurrencyA))
-	if err != nil {
-		return nil, err
-	}
+// func (bit *Bithumb) GetTicker(currency CurrencyPair) (*Ticker, error) {
+// 	respmap, err := HttpGet(bit.client, fmt.Sprintf("%s/public/ticker/%s", baseUrl, currency.CurrencyA))
+// 	if err != nil {
+// 		return nil, err
+// 	}
 
-	if respmap["status"].(string) != "0000" {
-		return nil, errors.New(respmap["status"].(string))
-	}
+// 	if respmap["status"].(string) != "0000" {
+// 		return nil, errors.New(respmap["status"].(string))
+// 	}
 
-	datamap := respmap["data"].(map[string]interface{})
+// 	datamap := respmap["data"].(map[string]interface{})
 
-	return &Ticker{
-		Low:  ToFloat64(datamap["min_price"]),
-		High: ToFloat64(datamap["max_price"]),
-		Last: ToFloat64(datamap["closing_price"]),
-		Vol:  ToFloat64(datamap["units_traded"]),
-		Buy:  ToFloat64(datamap["buy_price"]),
-		Sell: ToFloat64(datamap["sell_price"]),
-	}, nil
-}
+// 	return &Ticker{
+// 		Low:  ToFloat64(datamap["min_price"]),
+// 		High: ToFloat64(datamap["max_price"]),
+// 		Last: ToFloat64(datamap["closing_price"]),
+// 		Vol:  ToFloat64(datamap["units_traded"]),
+// 		Buy:  ToFloat64(datamap["buy_price"]),
+// 		Sell: ToFloat64(datamap["sell_price"]),
+// 	}, nil
+// }
 
+// GetDepth GetDepth
 func (bit *Bithumb) GetDepth(size int, currency CurrencyPair) (*Depth, error) {
-	resp, err := HttpGet(bit.client, fmt.Sprintf("%s/public/orderbook/%s", baseUrl, currency.CurrencyA))
+	var uss = fmt.Sprintf("%s/public/orderbook/%s", baseUrl, currency.CurrencyA)
+
+	log.Println(uss)
+	//resp, err := HttpGet(bit.client, fmt.Sprintf("%s/public/orderbook/%s", baseUrl, currency.CurrencyA))
+	resp, err := HttpGet(bit.client, uss)
+
 	if err != nil {
 		return nil, err
 	}
-
+	log.Println("查询ok")
 	if resp["status"].(string) != "0000" {
 		return nil, errors.New(resp["status"].(string))
 	}
@@ -335,15 +363,15 @@ func (bit *Bithumb) GetDepth(size int, currency CurrencyPair) (*Depth, error) {
 	return dep, nil
 }
 
-func (bit *Bithumb) GetKlineRecords(currency CurrencyPair, period, size, since int) ([]Kline, error) {
-	panic("not implement")
-}
+// func (bit *Bithumb) GetKlineRecords(currency CurrencyPair, period, size, since int) ([]Kline, error) {
+// 	panic("not implement")
+// }
 
-//非个人，整个交易所的交易记录
-func (bit *Bithumb) GetTrades(currencyPair CurrencyPair, since int64) ([]Trade, error) {
-	panic("not implement")
-}
+// //非个人，整个交易所的交易记录
+// func (bit *Bithumb) GetTrades(currencyPair CurrencyPair, since int64) ([]Trade, error) {
+// 	panic("not implement")
+// }
 
 func (bit *Bithumb) GetExchangeName() string {
-	return "bithumb.com"
+	return "Bithumb"
 }

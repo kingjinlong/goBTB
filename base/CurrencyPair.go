@@ -18,6 +18,16 @@ type CurrencyPair struct {
 }
 
 var (
+	OKEX     = "OKEX"
+	HUOBIPRO = "HUOBIPRO"
+	BITHUMB  = "BITHUMB"
+	GATEIO   = "GATEIO"
+	OKCOIN   = "OKCOIN"
+	OTCBTC   = "OTCBTC"
+	BITTREX  = "BITTREX"
+)
+
+var (
 	UNKNOWN = Currency{"UNKNOWN", ""}
 	CNY     = Currency{"CNY", "rmb （China Yuan)"}
 	USD     = Currency{"USD", "USA dollar"}
@@ -45,7 +55,9 @@ var (
 	BCD     = Currency{"BCD", ""}
 	NEO     = Currency{"NEO", "neo.org"}
 	HSR     = Currency{"HSR", ""}
-
+	OKB     = Currency{"OKB", "OKEX plat coin"}
+	DASH    = Currency{"DASH", ""}
+	IOTA    = Currency{"IOTA", ""}
 	//currency pair
 
 	BTC_CNY  = CurrencyPair{BTC, CNY}
@@ -76,19 +88,22 @@ var (
 	XRP_USD = CurrencyPair{XRP, USD}
 	BCD_USD = CurrencyPair{BCD, USD}
 
-	BTC_USDT = CurrencyPair{BTC, USDT}
-	LTC_USDT = CurrencyPair{LTC, USDT}
-	BCH_USDT = CurrencyPair{BCH, USDT}
-	BCC_USDT = CurrencyPair{BCC, USDT}
-	ETC_USDT = CurrencyPair{ETC, USDT}
-	ETH_USDT = CurrencyPair{ETH, USDT}
-	BCD_USDT = CurrencyPair{BCD, USDT}
-	NEO_USDT = CurrencyPair{NEO, USDT}
-	EOS_USDT = CurrencyPair{EOS, USDT}
-	XRP_USDT = CurrencyPair{XRP, USDT}
-	HSR_USDT = CurrencyPair{HSR, USDT}
-
-	XRP_EUR = CurrencyPair{XRP, EUR}
+	BTC_USDT  = CurrencyPair{BTC, USDT}
+	LTC_USDT  = CurrencyPair{LTC, USDT}
+	BCH_USDT  = CurrencyPair{BCH, USDT}
+	BCC_USDT  = CurrencyPair{BCC, USDT}
+	ETC_USDT  = CurrencyPair{ETC, USDT}
+	ETH_USDT  = CurrencyPair{ETH, USDT}
+	BCD_USDT  = CurrencyPair{BCD, USDT}
+	NEO_USDT  = CurrencyPair{NEO, USDT}
+	EOS_USDT  = CurrencyPair{EOS, USDT}
+	XRP_USDT  = CurrencyPair{XRP, USDT}
+	HSR_USDT  = CurrencyPair{HSR, USDT}
+	DASH_USDT = CurrencyPair{DASH, USDT}
+	QTUM_USDT = CurrencyPair{QTUM, USDT}
+	ZEC_USDT  = CurrencyPair{ZEC, USDT}
+	IOTA_USDT = CurrencyPair{IOTA, USDT}
+	XRP_EUR   = CurrencyPair{XRP, EUR}
 
 	BTC_JPY = CurrencyPair{BTC, JPY}
 	LTC_JPY = CurrencyPair{LTC, JPY}
@@ -96,25 +111,43 @@ var (
 	ETC_JPY = CurrencyPair{ETC, JPY}
 	BCH_JPY = CurrencyPair{BCH, JPY}
 
-	LTC_BTC = CurrencyPair{LTC, BTC}
-	ETH_BTC = CurrencyPair{ETH, BTC}
-	ETC_BTC = CurrencyPair{ETC, BTC}
-	BCC_BTC = CurrencyPair{BCC, BTC}
-	BCH_BTC = CurrencyPair{BCH, BTC}
-	DCR_BTC = CurrencyPair{DCR, BTC}
-	XRP_BTC = CurrencyPair{XRP, BTC}
-	BTG_BTC = CurrencyPair{BTG, BTC}
-	BCD_BTC = CurrencyPair{BCD, BTC}
-	NEO_BTC = CurrencyPair{NEO, BTC}
-	EOS_BTC = CurrencyPair{EOS, BTC}
-	HSR_BTC = CurrencyPair{HSR, BTC}
+	LTC_BTC  = CurrencyPair{LTC, BTC}
+	ETH_BTC  = CurrencyPair{ETH, BTC}
+	ETC_BTC  = CurrencyPair{ETC, BTC}
+	BCC_BTC  = CurrencyPair{BCC, BTC}
+	BCH_BTC  = CurrencyPair{BCH, BTC}
+	DCR_BTC  = CurrencyPair{DCR, BTC}
+	XRP_BTC  = CurrencyPair{XRP, BTC}
+	BTG_BTC  = CurrencyPair{BTG, BTC}
+	BCD_BTC  = CurrencyPair{BCD, BTC}
+	NEO_BTC  = CurrencyPair{NEO, BTC}
+	EOS_BTC  = CurrencyPair{EOS, BTC}
+	HSR_BTC  = CurrencyPair{HSR, BTC}
+	QTUM_BTC = CurrencyPair{QTUM, BTC}
 
-	ETC_ETH = CurrencyPair{ETC, ETH}
-	EOS_ETH = CurrencyPair{EOS, ETH}
-	ZEC_ETH = CurrencyPair{ZEC, ETH}
-	NEO_ETH = CurrencyPair{NEO, ETH}
-	HSR_ETH = CurrencyPair{HSR, ETH}
-	LTC_ETH = CurrencyPair{LTC, ETH}
+	ETC_ETH  = CurrencyPair{ETC, ETH}
+	EOS_ETH  = CurrencyPair{EOS, ETH}
+	ZEC_ETH  = CurrencyPair{ZEC, ETH}
+	NEO_ETH  = CurrencyPair{NEO, ETH}
+	HSR_ETH  = CurrencyPair{HSR, ETH}
+	LTC_ETH  = CurrencyPair{LTC, ETH}
+	XRP_ETH  = CurrencyPair{XRP, ETH}
+	QTUM_ETH = CurrencyPair{QTUM, ETH}
+	DASH_ETH = CurrencyPair{DASH, ETH}
+	BCH_ETH  = CurrencyPair{BCH, ETH}
+	IOTA_ETH = CurrencyPair{IOTA, ETH}
+	BTC_ETH  = CurrencyPair{BTC, ETH}
+
+	BCH_OKB  = CurrencyPair{BCH, OKB}
+	LTC_OKB  = CurrencyPair{LTC, OKB}
+	EOS_OKB  = CurrencyPair{EOS, OKB}
+	ETC_OKB  = CurrencyPair{ETC, OKB}
+	DASH_OKB = CurrencyPair{DASH, OKB}
+	IOTA_OKB = CurrencyPair{IOTA, OKB}
+	NEO_OKB  = CurrencyPair{NEO, OKB}
+	QTUM_OKB = CurrencyPair{QTUM, OKB}
+	XRP_OKB  = CurrencyPair{XRP, OKB}
+	ZEC_OKB  = CurrencyPair{ZEC, OKB}
 
 	UNKNOWN_PAIR = CurrencyPair{UNKNOWN, UNKNOWN}
 )

@@ -402,15 +402,20 @@ func (hbV2 *HuoBi_V2) GetTicker(currencyPair CurrencyPair) (*Ticker, error) {
 	return ticker, nil
 }
 
+// GetDepth GetDepth
 func (hbV2 *HuoBi_V2) GetDepth(size int, currency CurrencyPair) (*Depth, error) {
-	url := hbV2.baseUrl + "/market/depth?symbol=%s&type=step1"
-	//log.Printf(fmt.Sprintf(url, strings.ToLower(currency.ToSymbol(""))))
+	//url := hbV2.baseUrl + "/market/depth?symbol=%s&type=step1"
+	sd := fmt.Sprintf(hbV2.baseUrl+"/market/depth?symbol=%s&type=step1", strings.ToLower(currency.ToSymbol("")))
 	//log.Printf(url)
-	respmap, err := HttpGet(hbV2.httpClient, fmt.Sprintf(url, strings.ToLower(currency.ToSymbol(""))))
+	log.Printf(sd)
+	respmap, err := HttpGet(hbV2.httpClient, sd)
+	log.Printf("1")
+	//respmap, err := HttpGet(hbV2.httpClient, fmt.Sprintf(url, strings.ToLower(currency.ToSymbol(""))))
 	if err != nil {
+		log.Printf("3")
 		return nil, err
 	}
-
+	log.Printf("2")
 	if "ok" != respmap["status"].(string) {
 		return nil, errors.New(respmap["err-msg"].(string))
 	}
