@@ -1,17 +1,4 @@
 {
-  "BindAddr": ":8800",
-  "RedisAddr": "118.25.46.82:16379",
-  "MysqlAddr": "118.25.46.82:13306",
-  "MysqlUser": "spacex",
-  "MysqlPassword": "123654",
-  "LogPath": "ucenter.log",
-  "EtcdAddr": [
-    "118.25.46.82:12379"
-  ],
-  "Mdns": true,
-  "ProxyTable": {
-    "/p1":{
-      "target":"http://localhost:2015"
-    }
-  }
+  "BITapiKey": "spider.log",
+  "BITsecretKey":"dd"
 }

@@ -11,13 +11,8 @@ import (
 
 // AppConfig AppConfig
 type AppConfig struct {
-	RedisAddr     string
-	MysqlAddr     string
-	EtcdAddr      []string
-	Mdns          bool
-	LogPath       string
-	MysqlUser     string
-	MysqlPassword string
+	BITapiKey    string
+	BITsecretKey string
 }
 
 var configPath string
@@ -32,6 +27,7 @@ func parseConf(configPath string) error {
 		log.Println(err, data)
 		return err
 	}
+	log.Println(appConfig)
 	return nil
 }
 
@@ -53,7 +49,7 @@ func main() {
 		os.Exit(0)
 	}
 	log.Printf("---")
-	log.Printf(appConfig.RedisAddr)
+	log.Println(appConfig)
 
 	//strategy.StrategyHuobiOkex()
 	//strategy.Test_USD_LTC_USDT()
