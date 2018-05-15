@@ -8,12 +8,6 @@ import (
 	"github.com/BTB/goBTB/base"
 )
 
-// ConnectKey	15ef9b5fae03dc7914d0773cf4d02232
-// SecretKey 427f722f23da73cf77b0fa5e2fe604b0
-// var accesskey, secretkey string
-// var accesskey = "15ef9b5fae03dc7914d0773cf4d02232"
-// var secretkey = "427f722f23da73cf77b0fa5e2fe604b0"
-
 var accesskey = ""
 var secretkey = ""
 var orderID = ""
